@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock title %}</title>
+  </head>
+  <body>
+    <main>
+      <section>{% include 'components/header.html' %}</section>
+
+
+      {% for availability in availabilities %}
+
+      <div>
+
+        {{availability}}
+        {% comment %} {{availability.day_of_week}} {% endcomment %}
+        {% comment %} {% for inretval in availability.intervals %}
+        
+        <span>interval.start_time</span>
+        {% endfor %} {% endcomment %}
+
+      </div>
+
+      {% endfor %}
+
+      <section>{% block content %}{% endblock content %}</section>
+
+      <section>{% include 'components/footer.html' %}</section>
+    </main>
+  </body>
+</html>
