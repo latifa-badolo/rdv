@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -13,26 +14,6 @@ class Calendar(models.Model):
         default=10,
         null=True,
         blank=True,
-    )
-
-    EMPPOINTMENT_DURATION_IN_MINUTES = [
-        (30, "30 minutes"),
-        (45, "45 minutes"),
-        (60, "60 minutes"), # 1h
-        (75, "75 minutes"), # 1h15mn
-        (90, "90 minutes"), # 1h30mn
-        (105, "105 minutes"), # 1h45mn
-        (120, "120 minutes"), # 2h
-        (135, "135 minutes"), # 2h15mn
-        (150, "150 minutes"), # 2h30mn
-        (165, "165 minutes"), # 2h45mn
-        (180, "180 minutes"), # 3h
-    ]
-    enppointment_duration_in_minutes = models.IntegerField(
-        choices=EMPPOINTMENT_DURATION_IN_MINUTES,
-        default=30,
-        null=False,
-        blank=False,
     )
 
     active = models.BooleanField(
@@ -60,6 +41,7 @@ class Calendar(models.Model):
 
 
 class Availability(models.Model):
+
     DAYS_OF_WEEK = [
         ("MONDAY", "Monday"),
         ("TUESDAY", "Tuesday"),
@@ -74,6 +56,16 @@ class Availability(models.Model):
         choices=DAYS_OF_WEEK,
         null=False,
         blank=False,
+    )
+
+    start_time = models.TimeField(
+        null=True,
+        blank=True,
+    )
+
+    end_time = models.TimeField(
+        null=True,
+        blank=True,
     )
 
     calendar = models.ForeignKey(
@@ -95,28 +87,6 @@ class Availability(models.Model):
         null=True,
         blank=True,
     )
-
-
-class AvailabilityInterval(models.Model):
-
-    availibility = models.ForeignKey(
-        to=Availability,
-        on_delete=models.CASCADE,
-        related_name="intervals",
-        null=False,
-        blank=False,
-    )
-
-    start_time = models.TimeField(
-        null=False,
-        blank=False,
-    )
-
-    end_time = models.TimeField(
-        null=False,
-        blank=False,
-    )
-
 
 
 class Appointment(models.Model):
@@ -230,3 +200,6 @@ class Attendee(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"

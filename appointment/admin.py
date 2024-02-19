@@ -1,22 +1,19 @@
 from django.contrib import admin
-from .models import ( Appointment, Attendee, Availability, AvailabilityInterval, Calendar)
+from .models import ( Appointment, Attendee, Availability, Calendar)
 
+class AvailabilityInline(admin.TabularInline):
+    model = Availability
+    fields = ["day_of_week", "start_time", "end_time"]
 
-class AvailabilityIntervalInlineInline(admin.TabularInline):
-    model = AvailabilityInterval
 
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
-    list_display = ["user", "enppointment_duration_in_minutes", "active", "updated_at"]
+    list_display = ["user", "active", "updated_at"]
+    inlines = [AvailabilityInline]
 
 @admin.register(Availability)
 class AvailabilityAdmin(admin.ModelAdmin):
-    list_display = ["calendar", "day_of_week", "updated_at"]
-    inlines = [AvailabilityIntervalInlineInline]
-
-@admin.register(AvailabilityInterval)
-class AvailabilityIntervalAdmin(admin.ModelAdmin):
-    list_display = ["start_time", "end_time",]
+    list_display = ["calendar", "start_time", "end_time", "day_of_week", "updated_at"]
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):

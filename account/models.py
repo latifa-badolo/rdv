@@ -25,6 +25,9 @@ class User(AbstractUser):
         blank=False,
     )
 
+    def __str__(self):
+        return self.username
+
 
 class Service(models.Model):
 
@@ -55,6 +58,26 @@ class Service(models.Model):
         blank=True,
     )
 
+    EMPPOINTMENT_DURATION_IN_MINUTES = [
+        (30, "30 minutes"),
+        (45, "45 minutes"),
+        (60, "60 minutes"), # 1h
+        (75, "75 minutes"), # 1h15mn
+        (90, "90 minutes"), # 1h30mn
+        (105, "105 minutes"), # 1h45mn
+        (120, "120 minutes"), # 2h
+        (135, "135 minutes"), # 2h15mn
+        (150, "150 minutes"), # 2h30mn
+        (165, "165 minutes"), # 2h45mn
+        (180, "180 minutes"), # 3h
+    ]
+    enppointment_duration_in_minutes = models.IntegerField(
+        choices=EMPPOINTMENT_DURATION_IN_MINUTES,
+        default=30,
+        null=False,
+        blank=False,
+    )
+
     message_template = models.TextField(
         null=True,
         blank=True,
@@ -76,3 +99,6 @@ class Service(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return self.name
