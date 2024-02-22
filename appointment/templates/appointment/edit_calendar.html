@@ -1,25 +1,27 @@
 {% extends "base.html" %} {% block title %}Mon calendrier{% endblock title %}
-
+<div></div>
 {% block content %}
-<form method="post">
-  {% csrf_token %}
 
-  <fieldset name="Calndrier">
-    <div class="d-flex align-items-center">{{edit_calendar_form}}</div>
-  </fieldset>
+<div class="m-4">
+  <form method="post">
+    {% csrf_token %}
 
-  <fieldset>
-    <div>
-      {% for form in edit_availability_formset %}
+    <fieldset name="Calandrier" class="my-4 mx-5">
+      <div class="d-flex align-items-center">{{edit_calendar_form}}</div>
+    </fieldset>
 
-      <div class="d-flex align-items-center">{{form}}</div>
+    <fieldset name="Horaires" class="my-4 mx-5">
+      <div></di>
+      <div>
+        {% for form in edit_availability_formset %}
 
-      {% endfor %}
-    </div>
-  </fieldset>
+        <div class="d-flex align-items-center my-3">{{form}}</div>
 
-  <button type="submit" class="btn btn-primary">Primary</button>
+        {% endfor %}
+      </div>
+    </fieldset>
 
-
-</form>
+    <button type="submit" class="btn btn-primary">Primary</button>
+  </form>
+</div>
 {% endblock content %}

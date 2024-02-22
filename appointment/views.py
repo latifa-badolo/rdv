@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views import View
-
+from django.contrib.auth import get_user_model
 from .forms import EditCalendarForm, EditAvailabilityFormSet, CreateAppointmentForm
 
-from .models import Calendar, Appointment, Attendee, Availability
+from datetime import datetime
+
+from .models import Calendar, Appointment, Availability
+from account.models import ServiceProvider
+
+User = get_user_model()
 
 
 def see_calendar(request, service_provider_id, *args, **kwargs):
@@ -36,21 +40,56 @@ def search_service_provider(request):
 
     return render(request=request, template_name="appointment/search_service_provider.html", context={})
 
-def see_service(request):
+def service_provider_detail(request, service_provider_id):
     context = {}
+
+    if not request.user.is_authenticated:
+        return redirect("/admin/login")
+
+    if request.method == "POST":
+        appointment = CreateAppointmentForm(request.POST)
+
+        if appointment.is_valid():
+            service_provider = ServiceProvider.objects.get(pk=service_provider_id)
+            owner = User.objects.get(pk=service_provider.user.pk)
+            calendar = Calendar.objects.get(owner=service_provider.pk)
+            availabilities = Availability.objects.filter(calendar=calendar)
+
+            appointment = appointment.save(commit=False)
+
+            appointment.attende = request.user
+            appointment.calendar = calendar
+
+            appointment.save()
+
+            return redirect("/")
 
     appointment_form = CreateAppointmentForm()
     context["appointment_form"] = appointment_form
 
-    return render(request=request, template_name="appointment/service_provider_detail.html", context=context)
+    service_provider = ServiceProvider.objects.get(pk=service_provider_id)
+    owner = User.objects.get(pk=service_provider.user.pk)
+    calendar = Calendar.objects.get(owner=service_provider.pk)
+    availabilities = Availability.objects.filter(calendar=calendar)
 
+    context["owner"] = owner
+    context["service_provider"] = service_provider
+    context["calendar"] = calendar
+    context["availabilities"] = availabilities
+
+    return render(request=request, template_name="appointment/service_provider_detail.html", context=context)
 
 def my_appointments(request):
 
     context = {}
 
-    pending_appointments = Appointment.objects.filter(status="PENDING")
-    accepted_appointments = Appointment.objects.filter(status="ACCEPTED")
+    if not request.user.is_authenticated:
+        return redirect("/admin/login")
+
+    service_provider = ServiceProvider.objects.get(user=request.user)
+
+    pending_appointments = Appointment.objects.filter(status="PENDING", calendar__owner=service_provider.pk)
+    accepted_appointments = Appointment.objects.filter(status="ACCEPTED", calendar__owner=service_provider.pk)
 
     context["pending_appointments"] = pending_appointments
     context["accepted_appointments"] = accepted_appointments
@@ -85,60 +124,73 @@ def edit_calendar(request):
         user = request.user
         context = {}
 
-
         # calendar = Calendar.objects.filter(user=user.pk).first()
         # availlabilities = Availability.objects.filter(calendar=calendar.pk)
 
+        service_provider = ServiceProvider.objects.get(user=user)
 
-        calendar = EditCalendarForm(data=request.POST)
-        availabilities = EditAvailabilityFormSet(data=request.POST)
+        _calendar = Calendar.objects.get(owner=service_provider.pk)
+        _availlabilities = Availability.objects.filter(calendar=_calendar.pk)
 
-        calendar_pk = Calendar.objects.filter(user=user.pk).first().pk
+        calendar = EditCalendarForm(data=request.POST, instance=_calendar)
+        availabilities = EditAvailabilityFormSet(data=request.POST, calendar_id=_calendar.pk)
+        # availabilities = EditAvailabilityFormSet(data=request.POST, queryset=Availability.objects.filter(calendar=_calendar.pk))
 
         if calendar.is_valid():
             calendar = calendar.save(commit=False)
-
-            calendar.pk = calendar_pk
-            calendar.user = user
-
             calendar.save()
 
-        if availabilities.is_valid():
-            instances = availabilities.save(commit=False)
-
-            for instance in instances:
-                Availability.objects.filter(calendar=calendar_pk, day_of_week=instance.day_of_week).update(
-                    start_time=instance.start_time,
-                    end_time=instance.end_time,
-                )
-                # instance.calendar = calendar_pk
-                # instance.save()
-
-        calendar = Calendar.objects.filter(user=user.pk).first()
-        availlabilities = Availability.objects.filter(calendar=calendar.pk)
-
-        edit_calendar_form = EditCalendarForm(instance=calendar)
-        edit_availability_formset = EditAvailabilityFormSet(initial=availlabilities.values())
-
-        context = {"edit_calendar_form": edit_calendar_form, "edit_availability_formset": edit_availability_formset}
-
-        return render(request=request, template_name="appointment/edit_calendar.html", context=context)
 
 
-    else:
+        # instances = availabilities.save(commit=False)
+        print(availabilities    )
+        # if availabilities.is_valid():
 
-        user = request.user
-        context = {}
+        DAYS_OF_WEEK = [
+            "MONDAY",
+            "TUESDAY",
+            "WEDNESDAY",
+            "THURSDAY",
+            "FRIDAY",
+            "SATURDAY",
+            "SUNDAY",
+        ]
 
-        calendar = Calendar.objects.filter(user=user.pk).first()
-        availlabilities = Availability.objects.filter(calendar=calendar.pk)
+        for i in range(0, 7):
+            day_of_week = DAYS_OF_WEEK[i]
+            start_time = request.POST.get(f"form-{i}-start_time")
+            end_time = request.POST.get(f"form-{i}-end_time")
 
-        edit_calendar_form = EditCalendarForm(instance=calendar)
-        edit_availability_formset = EditAvailabilityFormSet(initial=availlabilities.values())
+            availability = Availability.objects.filter(calendar=_calendar.pk, day_of_week=day_of_week).first()
+            availability.start_time = datetime.strptime(start_time, "%H:%M:%S").time()
+            availability.end_time = datetime.strptime(end_time, "%H:%M:%S").time()
+            availability.save()
 
-        context = {"edit_calendar_form": edit_calendar_form, "edit_availability_formset": edit_availability_formset}
 
-        return render(request=request, template_name="appointment/edit_calendar.html", context=context)
+        # for instance in availabilities:
+        #     availability = instance.save()
+        #     Availability.objects.filter(day_of_week=instance.day_of_week).update(
+        #         start_time=instance.start_time,
+        #         end_time=instance.end_time,
+        #     )
+        #     # instance.calendar = calendar_pk
+        #     instance.save()
+
+
+    user = request.user
+    context = {}
+
+    service_provider = ServiceProvider.objects.get(user=user)
+    calendar = Calendar.objects.get(owner=service_provider.pk)
+    availlabilities = Availability.objects.filter(calendar=calendar.pk)
+
+    edit_calendar_form = EditCalendarForm(instance=calendar)
+    edit_availability_formset = EditAvailabilityFormSet(calendar_id=calendar.pk)
+    # edit_availability_formset = EditAvailabilityFormSet(initial=availlabilities.values())
+
+    context = {"edit_calendar_form": edit_calendar_form, "edit_availability_formset": edit_availability_formset}
+
+    return render(request=request, template_name="appointment/edit_calendar.html", context=context)
 
 
 DAY_HOURS_15 = [

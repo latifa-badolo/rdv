@@ -12,34 +12,85 @@ class User(AbstractUser):
 
     avatar = models.ImageField(
         upload_to="user/avatat",
-        height_field=100,
-        width_field=100,
-        max_length=150,
+        height_field=255,
+        width_field=255,
+        max_length=255,
         null=True,
         blank=True,
-    )
-
-    is_service_provider = models.BooleanField(
-        default=False,
-        null=False,
-        blank=False,
     )
 
     def __str__(self):
         return self.username
 
 
-class Service(models.Model):
+class Category(models.Model):
+    value = models.CharField(
+        max_length=255,
+        null=False,
+        blank=False,
+    )
 
-    user = models.ForeignKey(
+    def __str__(self):
+        return self.value
+
+
+class ServiceProvider(models.Model):
+
+    user = models.OneToOneField(
         to=User,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
     )
 
-    name = models.CharField(
+    work = models.CharField(
         max_length=255,
+        null=False,
+        blank=False,
+    )
+
+
+    TOWNS = [
+        ("ouagadougou", "Ouagadougou"),
+        ("bobodioulasso", "Bobo-Dioulasso"),
+        ("koudougou", "Koudougou"),
+        ("ouahigouya", "Ouahigouya"),
+        ("banfora", "Banfora"),
+        ("dedougou", "Dédougou"),
+        ("kaya", "Kaya"),
+        ("tenkodogo", "Tenkodogo"),
+        ("fada_ngourma", "Fada N'gourma"),
+        ("dori", "Dori"),
+        ("koupela", "Koupéla"),
+        ("reo", "Réo"),
+        ("ouargaye", "Ouargaye"),
+        ("manga", "Manga"),
+        ("ziniare", "Ziniaré"),
+        ("kombissiri", "Kombissiri"),
+        ("gaoua", "Gaoua"),
+        ("houet", "Houet"),
+        ("yako", "Yako"),
+        ("kongoussi", "Kongoussi"),
+        ("marchi", "Marchi"),
+        ("mohembo", "Mohembo"),
+        ("nouna", "Nouna"),
+        ("pama", "Pama"),
+        ("po", "Pô"),
+        ("sapone", "Saponé"),
+        ("seytenga", "Seytenga"),
+        ("sindou", "Sindou"),
+        ("solenzo", "Solénzo"),
+        ("sondrio", "Sondrio"),
+        ("tenado", "Tenado"),
+        ("titao", "Titao"),
+        ("tougan", "Tougan"),
+        ("yako", "Yako"),
+        ("zinga", "Zinga"),
+        ("zorgho", "Zorgho"),
+    ]
+    town = models.CharField(
+        max_length=255,
+        choices=TOWNS,
         null=False,
         blank=False,
     )
@@ -49,43 +100,20 @@ class Service(models.Model):
         blank=True,
     )
 
-    thumbnail = models.ImageField(
-        upload_to="service/img/",
-        height_field=100,
-        width_field=100,
-        max_length=150,
-        null=True,
-        blank=True,
-    )
-
-    EMPPOINTMENT_DURATION_IN_MINUTES = [
-        (30, "30 minutes"),
-        (45, "45 minutes"),
-        (60, "60 minutes"), # 1h
-        (75, "75 minutes"), # 1h15mn
-        (90, "90 minutes"), # 1h30mn
-        (105, "105 minutes"), # 1h45mn
-        (120, "120 minutes"), # 2h
-        (135, "135 minutes"), # 2h15mn
-        (150, "150 minutes"), # 2h30mn
-        (165, "165 minutes"), # 2h45mn
-        (180, "180 minutes"), # 3h
+    LEVEL_OF_EDUCATION = [
+        ("BEPC", "BEPC"),
+        ("BAC", "BAC"),
+        ("BAC+1", "BAC+1"),
+        ("BAC+2", "BAC+2"),
+        ("BAC+3", "Licence"),
+        ("BAC+4", "BAC+4"),
+        ("BAC+5", "MASTER"),
     ]
-    enppointment_duration_in_minutes = models.IntegerField(
-        choices=EMPPOINTMENT_DURATION_IN_MINUTES,
-        default=30,
+    level_of_education = models.CharField(
+        max_length=255,
+        choices=LEVEL_OF_EDUCATION,
         null=False,
         blank=False,
-    )
-
-    message_template = models.TextField(
-        null=True,
-        blank=True,
-    )
-
-    email_template = models.TextField(
-        null=True,
-        blank=True,
     )
 
     created_at = models.DateTimeField(
@@ -100,5 +128,13 @@ class Service(models.Model):
         blank=True,
     )
 
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
     def __str__(self):
-        return self.name
+        return self.user.username
+

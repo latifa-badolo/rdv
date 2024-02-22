@@ -1,11 +1,16 @@
 from django.contrib import admin
 
-from .models import User, Service
+from .models import User, ServiceProvider, Category
 
 @admin.register(User)
-class AvailabilityAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = ["username", "email", ]
 
-@admin.register(Service)
-class AvailabilityAdmin(admin.ModelAdmin):
-    list_display = ["name", "enppointment_duration_in_minutes", ]
+@admin.register(ServiceProvider)
+class ServiceProviderAdmin(admin.ModelAdmin):
+    list_display = ["user", "work", "town", "level_of_education"]
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["value"]
