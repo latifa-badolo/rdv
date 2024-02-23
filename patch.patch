@@ -1,45 +1,45 @@
 diff --git a/account/forms.py b/account/forms.py
-index 193c030..246eae0 100644
+index 246eae0..193c030 100644
 --- a/account/forms.py
 +++ b/account/forms.py
-@@ -1,25 +1,9 @@
+@@ -1,9 +1,25 @@
  from django import forms
  from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm, UserCreationForm as BaseUserCreationForm
  
--from .models import User, ServiceProvider
-+from .models import User, Service
+-from .models import User, Service
++from .models import User, ServiceProvider
  
--class RegisterForm(BaseUserCreationForm):
--
--    phone_number = forms.CharField(
--        required=True,
--        widget=forms.TextInput()
--    )
--
--    email = forms.EmailField(
--        required=True,
--        widget=forms.EmailInput()
--    )
--
--    avatar = forms.FileField(
--        required=True,
--        widget=forms.FileField()
--    )
-+class AuthenticationForm(BaseAuthenticationForm):
+-class AuthenticationForm(BaseAuthenticationForm):
++class RegisterForm(BaseUserCreationForm):
++
++    phone_number = forms.CharField(
++        required=True,
++        widget=forms.TextInput()
++    )
++
++    email = forms.EmailField(
++        required=True,
++        widget=forms.EmailInput()
++    )
++
++    avatar = forms.FileField(
++        required=True,
++        widget=forms.FileField()
++    )
  
      class Meta:
          model = User
--        fields = ["username", "password1", "password2", "phone_number","email", "avatar", "first_name", "last_name"]
++        fields = ["username", "password1", "password2", "phone_number","email", "avatar", "first_name", "last_name"]
 diff --git a/account/models.py b/account/models.py
-index 2a75dba..4f55c69 100644
+index 4f55c69..2a75dba 100644
 --- a/account/models.py
 +++ b/account/models.py
 @@ -11,7 +11,7 @@ class User(AbstractUser):
      )
  
      avatar = models.ImageField(
--        upload_to="user/avatat/",
-+        upload_to="user/avatat",
+-        upload_to="user/avatat",
++        upload_to="user/avatat/",
          height_field=255,
          width_field=255,
          max_length=255,
@@ -47,663 +47,663 @@ index 2a75dba..4f55c69 100644
      )
  
      def __str__(self):
--        return f'{self.first_name} {self.last_name}' 
-+        return self.username
+-        return self.username
++        return f'{self.first_name} {self.last_name}' 
  
  
  class Category(models.Model):
-@@ -137,3 +137,4 @@ class ServiceProvider(models.Model):
+@@ -137,4 +137,3 @@ class ServiceProvider(models.Model):
  
      def __str__(self):
          return self.user.username
-+
+-
 diff --git a/account/templates/account/login.html b/account/templates/account/login.html
-deleted file mode 100644
-index de5c0b3..0000000
---- a/account/templates/account/login.html
-+++ /dev/null
-@@ -1,46 +0,0 @@
--<!DOCTYPE html>
--<html lang="en">
--<head>
--    <meta charset="UTF-8">
--    <meta name="viewport" content="width=device-width, initial-scale=1.0">
--    <title>Connexion</title>
--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
--</head>
--<body>
--    
--    <div class="mx-auto my-5  border rounded-3 " style="width: 300px; padding: 10px;">
--        <p class="fs-3">Connexion</p>
--        
--        <div>
--            {% for error in errors %}
--            <div class="alert alert-danger" role="alert">
--                {{ error }}
--            </div>
--            {% endfor %}
--        </div>
--
--        <form method="post">
--            {% csrf_token %}
--            <div class="mb-4">
--                <label class="form-label" for="form2Example1">Nom d'utilisateur</label>
--              <input type="username" name="username" id="form2Example1" class="form-control" />
--            </div>
--        
--            <div class="mb-4">
--                <label class="form-label" for="form2Example2">Mots de passe</label>
--              <input type="password" name="password" id="form2Example2" class="form-control" />
--            </div>
--          
--            <input type="submit" class="btn btn-primary btn-block mb-4" value="Se connecter"/>
--          
--            <div class="text-center">
--              {% comment %} <p>Pas de compte? <a href="{% url "register" %}">Cr├®e un compte</a></p> {% endcomment %}
--              <button type="button" class="btn btn-link btn-floating mx-1">
--                <i class="fab fa-github"></i>
--              </button>
--            </div>
--          </form>
--    </div>
--
--</body>
--</html>
+new file mode 100644
+index 0000000..de5c0b3
+--- /dev/null
++++ b/account/templates/account/login.html
+@@ -0,0 +1,46 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    <title>Connexion</title>
++    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
++</head>
++<body>
++    
++    <div class="mx-auto my-5  border rounded-3 " style="width: 300px; padding: 10px;">
++        <p class="fs-3">Connexion</p>
++        
++        <div>
++            {% for error in errors %}
++            <div class="alert alert-danger" role="alert">
++                {{ error }}
++            </div>
++            {% endfor %}
++        </div>
++
++        <form method="post">
++            {% csrf_token %}
++            <div class="mb-4">
++                <label class="form-label" for="form2Example1">Nom d'utilisateur</label>
++              <input type="username" name="username" id="form2Example1" class="form-control" />
++            </div>
++        
++            <div class="mb-4">
++                <label class="form-label" for="form2Example2">Mots de passe</label>
++              <input type="password" name="password" id="form2Example2" class="form-control" />
++            </div>
++          
++            <input type="submit" class="btn btn-primary btn-block mb-4" value="Se connecter"/>
++          
++            <div class="text-center">
++              {% comment %} <p>Pas de compte? <a href="{% url "register" %}">Cr├®e un compte</a></p> {% endcomment %}
++              <button type="button" class="btn btn-link btn-floating mx-1">
++                <i class="fab fa-github"></i>
++              </button>
++            </div>
++          </form>
++    </div>
++
++</body>
++</html>
 diff --git a/account/templates/account/register.html b/account/templates/account/register.html
-deleted file mode 100644
-index e69de29..0000000
+new file mode 100644
+index 0000000..e69de29
 diff --git a/account/urls.py b/account/urls.py
-index 86656b9..e39cb2c 100644
+index e39cb2c..86656b9 100644
 --- a/account/urls.py
 +++ b/account/urls.py
-@@ -1,9 +1,3 @@
+@@ -1,3 +1,9 @@
  from django.urls import path
  
--from .views import (
--    login
--)
--
--urlpatterns = [
--    path("login/", login, name="login"),
--]
-+urlpatterns = []
+-urlpatterns = []
++from .views import (
++    login
++)
++
++urlpatterns = [
++    path("login/", login, name="login"),
++]
 diff --git a/account/views.py b/account/views.py
-index 631872f..91ea44a 100644
+index 91ea44a..631872f 100644
 --- a/account/views.py
 +++ b/account/views.py
-@@ -1,52 +1,3 @@
--from django.shortcuts import render, redirect
--from django.contrib.auth import login, authenticate, logout
-+from django.shortcuts import render
+@@ -1,3 +1,52 @@
+-from django.shortcuts import render
++from django.shortcuts import render, redirect
++from django.contrib.auth import login, authenticate, logout
  
--from .models import User, ServiceProvider
--
--from .forms import RegisterForm
--
--def login(request):
--    
--    context = {"errors": []}
--  
--    if request.method == "POST":
--        username = request.POST.get("username")
--        password = request.POST.get("password")
--
--        user = User.objects.filter(username=username).first()
--
--        if not user:
--            context["errors"].append("Cet utilisateur n'existe pas.")
--
--        user = authenticate(request=request, username=username, password=password)
--
--        if not user:
--            context["errors"].append("Vos identifiant sont incorect")
--        else:
--            return redirect("home")
--
--    return render(request=request, template_name="account/login.html", context=context)
--
--
--def register(request):
--    
--    context = {"errors": []}
--
--  
--    if request.method == "POST":
--
--        register_form = RegisterForm(request.POST)
--
--        register_form = register_form
--        username = request.POST.get("username")
--        password = request.POST.get("password")
--        password_confirmation = request.POST.get("password_confirmation")
--        first_name = request.POST.get("first_name")
--        last_name = request.POST.get("last_name")
--        description = request.POST.get("description")
--
--
--
--        
--
--    return render(request=request, template_name="account/register.html", context=context)
-+# Create your views here.
+-# Create your views here.
++from .models import User, ServiceProvider
++
++from .forms import RegisterForm
++
++def login(request):
++    
++    context = {"errors": []}
++  
++    if request.method == "POST":
++        username = request.POST.get("username")
++        password = request.POST.get("password")
++
++        user = User.objects.filter(username=username).first()
++
++        if not user:
++            context["errors"].append("Cet utilisateur n'existe pas.")
++
++        user = authenticate(request=request, username=username, password=password)
++
++        if not user:
++            context["errors"].append("Vos identifiant sont incorect")
++        else:
++            return redirect("home")
++
++    return render(request=request, template_name="account/login.html", context=context)
++
++
++def register(request):
++    
++    context = {"errors": []}
++
++  
++    if request.method == "POST":
++
++        register_form = RegisterForm(request.POST)
++
++        register_form = register_form
++        username = request.POST.get("username")
++        password = request.POST.get("password")
++        password_confirmation = request.POST.get("password_confirmation")
++        first_name = request.POST.get("first_name")
++        last_name = request.POST.get("last_name")
++        description = request.POST.get("description")
++
++
++
++        
++
++    return render(request=request, template_name="account/register.html", context=context)
 diff --git a/appointment/forms.py b/appointment/forms.py
-index 0c10ec8..c708e4c 100644
+index c708e4c..0c10ec8 100644
 --- a/appointment/forms.py
 +++ b/appointment/forms.py
-@@ -59,29 +59,28 @@ class CreateAppointmentForm(forms.ModelForm):
+@@ -59,28 +59,29 @@ class CreateAppointmentForm(forms.ModelForm):
          fields = ["date", "start_time", "end_time", "message"]
  
  
--class EditAvailabilityForm(forms.ModelForm):
--    day_of_week = forms.CharField(
--        disabled=True,
--        required=True,
--        label="Jour",
--        widget=forms.Select(attrs={"class": "form-select"})
--    )
+-# class EditAvailabilityForm(forms.ModelForm):
+-#     day_of_week = forms.CharField(
+-#         required=True,
+-#         label="Jour",
+-#         widget=forms.Select(attrs={"class": "form-select", })
+-#     )
 -
--    start_time = forms.TimeField(
--        required=False,
--        label="D├®but",
--        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
--    )
+-#     start_time = forms.TimeField(
+-#         required=False,
+-#         label="D├®but",
+-#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
+-#     )
 -
--    end_time = forms.TimeField(
--        required=False,
--        label="Fin",
--        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
--    )
+-#     end_time = forms.TimeField(
+-#         required=False,
+-#         label="Fin",
+-#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
+-#     )
 -
--    class Meta:
--        model = Availability
--        fields = ["day_of_week", "start_time", "end_time"]
-+# class EditAvailabilityForm(forms.ModelForm):
-+#     day_of_week = forms.CharField(
-+#         required=True,
-+#         label="Jour",
-+#         widget=forms.Select(attrs={"class": "form-select", })
-+#     )
+-#     class Meta:
+-#         model = Availability
+-#         fields = ["day_of_week", "start_time", "end_time"]
++class EditAvailabilityForm(forms.ModelForm):
++    day_of_week = forms.CharField(
++        disabled=True,
++        required=True,
++        label="Jour",
++        widget=forms.Select(attrs={"class": "form-select"})
++    )
 +
-+#     start_time = forms.TimeField(
-+#         required=False,
-+#         label="D├®but",
-+#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
-+#     )
++    start_time = forms.TimeField(
++        required=False,
++        label="D├®but",
++        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
++    )
 +
-+#     end_time = forms.TimeField(
-+#         required=False,
-+#         label="Fin",
-+#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
-+#     )
++    end_time = forms.TimeField(
++        required=False,
++        label="Fin",
++        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
++    )
 +
-+#     class Meta:
-+#         model = Availability
-+#         fields = ["day_of_week", "start_time", "end_time"]
++    class Meta:
++        model = Availability
++        fields = ["day_of_week", "start_time", "end_time"]
  
  
  class BaseAvailabilityFormSet(BaseModelFormSet):
-@@ -106,3 +105,4 @@ EditAvailabilityFormSet = modelformset_factory(
+@@ -105,4 +106,3 @@ EditAvailabilityFormSet = modelformset_factory(
          "end_time": forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6}),
      },
  )
-+
+-
 diff --git a/appointment/templates/appointment/search_service_provider.html b/appointment/templates/appointment/search_service_provider.html
-index 21983ca..6c9632c 100644
+index 6c9632c..21983ca 100644
 --- a/appointment/templates/appointment/search_service_provider.html
 +++ b/appointment/templates/appointment/search_service_provider.html
-@@ -4,65 +4,160 @@
+@@ -4,160 +4,65 @@
  
  <div>
    <div class="d-flex py-2 align-items-center justify-content-end mx-5">
--    <form class="d-flex mx-6 align-items-center "  role="search" method="get">
--        <div class="d-flex">
--          <div class="mb-4 mx-2">
--              <label for="start_time" class="form-label">D├®but</label>
--              <input type="time" name="start_time" class="form-control" value="{{ start_time }}" id="start_time">
--          </div>
--          <div class="mb-4 mx-2">
--              <label for="end_time" class="form-label">Fin</label>
--              <input type="time" name="end_time" class="form-control" value="{{ end_time }}" id="end_time">
--          </div>
-+    <div class="d-flex">
-+        <div class="mb-4 mx-2">
-+            <label for="start_time" class="form-label">D├®but</label>
-+            <input type="time" class="form-control" id="start_time">
+-    <div class="d-flex">
+-        <div class="mb-4 mx-2">
+-            <label for="start_time" class="form-label">D├®but</label>
+-            <input type="time" class="form-control" id="start_time">
+-        </div>
+-        <div class="mb-4 mx-2">
+-            <label for="end_time" class="form-label">Fin</label>
+-            <input type="time" class="form-control" id="end_time">
++    <form class="d-flex mx-6 align-items-center "  role="search" method="get">
++        <div class="d-flex">
++          <div class="mb-4 mx-2">
++              <label for="start_time" class="form-label">D├®but</label>
++              <input type="time" name="start_time" class="form-control" value="{{ start_time }}" id="start_time">
++          </div>
++          <div class="mb-4 mx-2">
++              <label for="end_time" class="form-label">Fin</label>
++              <input type="time" name="end_time" class="form-control" value="{{ end_time }}" id="end_time">
++          </div>
          </div>
-+        <div class="mb-4 mx-2">
-+            <label for="end_time" class="form-label">Fin</label>
-+            <input type="time" class="form-control" id="end_time">
-+        </div>
-+    </div>
+-    </div>
  
--        <select class="form-select mx-4" name="category" style="width: 150px" value="{{ category }}" aria-label="Default select example">
--
--          <option value="">Choisissez</option>
--          {% for category_el in categories %}
--            <option value="{{ category_el.id }}" selected="{% if category_el.id == category  %} selected {% endif %}">{{ category_el.value }}</option>
--          {% endfor %}
--        </select>
--        <input class="form-control me-2 w-10" type="search" value="{{ search }}" name="search" placeholder="Search" aria-label="Search">
-+    <select class="form-select mx-4" style="width: 150px" aria-label="Default select example">
-+        <option selected>Categorie</option>
-+        <option value="1">One</option>
-+        <option value="2">Two</option>
-+        <option value="3">Three</option>
-+      </select>
-+    <form class="d-flex mx-6" role="search">
-+        <input class="form-control me-2 w-10" type="search" placeholder="Search" aria-label="Search">
+-    <select class="form-select mx-4" style="width: 150px" aria-label="Default select example">
+-        <option selected>Categorie</option>
+-        <option value="1">One</option>
+-        <option value="2">Two</option>
+-        <option value="3">Three</option>
+-      </select>
+-    <form class="d-flex mx-6" role="search">
+-        <input class="form-control me-2 w-10" type="search" placeholder="Search" aria-label="Search">
++        <select class="form-select mx-4" name="category" style="width: 150px" value="{{ category }}" aria-label="Default select example">
++
++          <option value="">Choisissez</option>
++          {% for category_el in categories %}
++            <option value="{{ category_el.id }}" selected="{% if category_el.id == category  %} selected {% endif %}">{{ category_el.value }}</option>
++          {% endfor %}
++        </select>
++        <input class="form-control me-2 w-10" type="search" value="{{ search }}" name="search" placeholder="Search" aria-label="Search">
          <button class="btn btn-outline-success" type="submit">Search</button>
        </form>
    </div>
  
--  
++  
    <div>
      <div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-2">
--      {% for service_provider in service_providers %}
--      <a class="nav-link" style="color: #222;text-decoration: none;" href="{% url "service_provider_detail" service_provider.id %}">
--        <div class="col">
--          <div class="card">
--            <img src="{{ service_provider }}" class="card-img-top" alt="{{ service_provider.avatar }}" />
--            <div class="card-body">
--              <h5 class="card-title">{{ service_provider.user }}</h5>
--              <table class="table table-sm">
--                <tbody>
--                  <tr>
--                    <td>M├®tier : </td>
--                    <td>{{ service_provider.work }}</td>
--                  </tr>
--                  <tr>
--                    <td>Niveau d'├®tude : </td>
--                    <td>{{ service_provider.level_of_education }}</td>
--                  </tr>
--                  <tr>
--                    <td>Ville : </td>
--                    <td>{{ service_provider.town }}</td>
--                  </tr>
--                </tbody>
--              </table>
--              <p class="card-text">
--                <span class="fs-5 fw-semibold d-inline-block">Description : </span>
--                <span class="fs-6 lh-sm d-inline-block "> {{ service_provider.description |truncatechars:135 }}</span> 
--              </p>
--            </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
-+          </div>
-+        </div>
-+      </div>
-+      <div class="col">
-+        <div class="card">
-+          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-+          <div class="card-body">
-+            <h5 class="card-title">Card title</h5>
-+            <p class="card-text">
-+              This is a longer card with supporting text below as a natural
-+              lead-in to additional content. This content is a little bit
-+              longer.
-+            </p>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
+-          </div>
+-        </div>
+-      </div>
+-      <div class="col">
+-        <div class="card">
+-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
+-          <div class="card-body">
+-            <h5 class="card-title">Card title</h5>
+-            <p class="card-text">
+-              This is a longer card with supporting text below as a natural
+-              lead-in to additional content. This content is a little bit
+-              longer.
+-            </p>
++      {% for service_provider in service_providers %}
++      <a class="nav-link" style="color: #222;text-decoration: none;" href="{% url "service_provider_detail" service_provider.id %}">
++        <div class="col">
++          <div class="card">
++            <img src="{{ service_provider }}" class="card-img-top" alt="{{ service_provider.avatar }}" />
++            <div class="card-body">
++              <h5 class="card-title">{{ service_provider.user }}</h5>
++              <table class="table table-sm">
++                <tbody>
++                  <tr>
++                    <td>M├®tier : </td>
++                    <td>{{ service_provider.work }}</td>
++                  </tr>
++                  <tr>
++                    <td>Niveau d'├®tude : </td>
++                    <td>{{ service_provider.level_of_education }}</td>
++                  </tr>
++                  <tr>
++                    <td>Ville : </td>
++                    <td>{{ service_provider.town }}</td>
++                  </tr>
++                </tbody>
++              </table>
++              <p class="card-text">
++                <span class="fs-5 fw-semibold d-inline-block">Description : </span>
++                <span class="fs-6 lh-sm d-inline-block "> {{ service_provider.description |truncatechars:135 }}</span> 
++              </p>
++            </div>
            </div>
          </div>
--      </a>
--      {% endfor %}
-+      </div>
+-      </div>
++      </a>
++      {% endfor %}
      </div>
    </div>
  </div>
 diff --git a/appointment/urls.py b/appointment/urls.py
-index f158ee4..7330886 100644
+index 7330886..f158ee4 100644
 --- a/appointment/urls.py
 +++ b/appointment/urls.py
-@@ -12,16 +12,11 @@ from .views import (
+@@ -12,11 +12,16 @@ from .views import (
  )
  
  urlpatterns = [
--    path("", search_service_provider, name="home"),
--    
--    path("calendar/edit", edit_calendar, name="edit_calendar"),
--    # path("see_calendar/<int:service_provider_id>", see_calendar, name="see_calendar"),
--    
--    path("appointment/", my_appointments, name="my_appointments"),
--    
--    path("service_provider/", search_service_provider, name="list_service_providers"),
--    path("service_provider/<int:service_provider_id>", service_provider_detail, name="service_provider_detail"),
--
-+    path("see_calendar/<int:service_provider_id>", see_calendar, name="see_calendar"),
-+    path("edit_calendar/", edit_calendar, name="edit_calendar"),
-+    path("search_service_provider/", search_service_provider, name="search_service_provider"),
-+    path("my_appointments/", my_appointments, name="my_appointments"),
-+    path("service_provider_detail/<int:service_provider_id>", service_provider_detail, name="service_provider_detail"),
+-    path("see_calendar/<int:service_provider_id>", see_calendar, name="see_calendar"),
+-    path("edit_calendar/", edit_calendar, name="edit_calendar"),
+-    path("search_service_provider/", search_service_provider, name="search_service_provider"),
+-    path("my_appointments/", my_appointments, name="my_appointments"),
+-    path("service_provider_detail/<int:service_provider_id>", service_provider_detail, name="service_provider_detail"),
++    path("", search_service_provider, name="home"),
++    
++    path("calendar/edit", edit_calendar, name="edit_calendar"),
++    # path("see_calendar/<int:service_provider_id>", see_calendar, name="see_calendar"),
++    
++    path("appointment/", my_appointments, name="my_appointments"),
++    
++    path("service_provider/", search_service_provider, name="list_service_providers"),
++    path("service_provider/<int:service_provider_id>", service_provider_detail, name="service_provider_detail"),
++
      path("accept_appointment/<int:appointment_id>", accept_appointment, name="accept_appointment"),
      path("cancel_appointment/<int:appointment_id>", cancel_appointment, name="cancel_appointment"),
      path("reject_appointment/<int:appointment_id>", reject_appointment, name="reject_appointment"),
 diff --git a/appointment/views.py b/appointment/views.py
-index 28c7ff8..8767096 100644
+index 8767096..28c7ff8 100644
 --- a/appointment/views.py
 +++ b/appointment/views.py
-@@ -1,21 +1,14 @@
+@@ -1,14 +1,21 @@
  from django.shortcuts import render, redirect
  from django.contrib.auth import get_user_model
  from .forms import EditCalendarForm, EditAvailabilityFormSet, CreateAppointmentForm
--from django.contrib.auth.decorators import login_required, permission_required
++from django.contrib.auth.decorators import login_required, permission_required
  
--from django.utils.dateparse import parse_time
-+from datetime import datetime
+-from datetime import datetime
++from django.utils.dateparse import parse_time
  
  from .models import Calendar, Appointment, Availability
--from account.models import ServiceProvider, Category
-+from account.models import ServiceProvider
+-from account.models import ServiceProvider
++from account.models import ServiceProvider, Category
  
  User = get_user_model()
  
--"""
--    - send notification
--    - research service provider +
--    - edit calendar availabilities +
--    - login and signin +
--"""
++"""
++    - send notification
++    - research service provider +
++    - edit calendar availabilities +
++    - login and signin +
++"""
  
  def see_calendar(request, service_provider_id, *args, **kwargs):
  
-@@ -45,39 +38,7 @@ def see_calendar(request, service_provider_id, *args, **kwargs):
+@@ -38,7 +45,39 @@ def see_calendar(request, service_provider_id, *args, **kwargs):
  
  def search_service_provider(request):
  
--    context = {}
--
--    service_providers = ServiceProvider.objects.all() 
--
--    category = request.GET.get("category")
--    search = request.GET.get("search")
--    start_time = request.GET.get("start_time")
--    end_time = request.GET.get("end_time")
--
--    if category :
--        service_providers = service_providers.filter(category__value=category)
--        context["category"] = category
--
--    if start_time :
--        service_providers = service_providers.filter(calendar__appointments__start_time__range=(parse_time(start_time), parse_time(end_time)))
--        context["start_time"] = start_time
--
--        
--    # if end_time :
--    #     service_providers = service_providers.filter(calendar__appointments__end_time__gte=parse_time(end_time))
--    #     context["end_time"] = end_time
--
--
--    if search :
--        service_providers = service_providers.filter(description__icontains=search)
--        context["search"] = search
--
--    context["categories"] = Category.objects.all()
--
--
--    context["service_providers"] = service_providers
--
--    return render(request=request, template_name="appointment/search_service_provider.html", context=context)
-+    return render(request=request, template_name="appointment/search_service_provider.html", context={})
+-    return render(request=request, template_name="appointment/search_service_provider.html", context={})
++    context = {}
++
++    service_providers = ServiceProvider.objects.all() 
++
++    category = request.GET.get("category")
++    search = request.GET.get("search")
++    start_time = request.GET.get("start_time")
++    end_time = request.GET.get("end_time")
++
++    if category :
++        service_providers = service_providers.filter(category__value=category)
++        context["category"] = category
++
++    if start_time :
++        service_providers = service_providers.filter(calendar__appointments__start_time__range=(parse_time(start_time), parse_time(end_time)))
++        context["start_time"] = start_time
++
++        
++    # if end_time :
++    #     service_providers = service_providers.filter(calendar__appointments__end_time__gte=parse_time(end_time))
++    #     context["end_time"] = end_time
++
++
++    if search :
++        service_providers = service_providers.filter(description__icontains=search)
++        context["search"] = search
++
++    context["categories"] = Category.objects.all()
++
++
++    context["service_providers"] = service_providers
++
++    return render(request=request, template_name="appointment/search_service_provider.html", context=context)
  
  def service_provider_detail(request, service_provider_id):
      context = {}
-@@ -118,7 +79,6 @@ def service_provider_detail(request, service_provider_id):
+@@ -79,6 +118,7 @@ def service_provider_detail(request, service_provider_id):
  
      return render(request=request, template_name="appointment/service_provider_detail.html", context=context)
  
--@login_required(redirect_field_name="my_appointments", login_url="login")
++@login_required(redirect_field_name="my_appointments", login_url="login")
  def my_appointments(request):
  
      context = {}
-@@ -164,16 +124,28 @@ def edit_calendar(request):
+@@ -124,28 +164,16 @@ def edit_calendar(request):
          user = request.user
          context = {}
  
-+        # calendar = Calendar.objects.filter(user=user.pk).first()
-+        # availlabilities = Availability.objects.filter(calendar=calendar.pk)
-+
+-        # calendar = Calendar.objects.filter(user=user.pk).first()
+-        # availlabilities = Availability.objects.filter(calendar=calendar.pk)
+-
          service_provider = ServiceProvider.objects.get(user=user)
  
          _calendar = Calendar.objects.get(owner=service_provider.pk)
-+        _availlabilities = Availability.objects.filter(calendar=_calendar.pk)
+-        _availlabilities = Availability.objects.filter(calendar=_calendar.pk)
  
          calendar = EditCalendarForm(data=request.POST, instance=_calendar)
-+        availabilities = EditAvailabilityFormSet(data=request.POST, calendar_id=_calendar.pk)
-+        # availabilities = EditAvailabilityFormSet(data=request.POST, queryset=Availability.objects.filter(calendar=_calendar.pk))
+-        availabilities = EditAvailabilityFormSet(data=request.POST, calendar_id=_calendar.pk)
+-        # availabilities = EditAvailabilityFormSet(data=request.POST, queryset=Availability.objects.filter(calendar=_calendar.pk))
  
          if calendar.is_valid():
              calendar = calendar.save(commit=False)
              calendar.save()
  
-+
-+
-+        # instances = availabilities.save(commit=False)
-+        print(availabilities    )
-+        # if availabilities.is_valid():
-+
+-
+-
+-        # instances = availabilities.save(commit=False)
+-        print(availabilities    )
+-        # if availabilities.is_valid():
+-
          DAYS_OF_WEEK = [
              "MONDAY",
              "TUESDAY",
-@@ -190,18 +162,31 @@ def edit_calendar(request):
+@@ -162,31 +190,18 @@ def edit_calendar(request):
              end_time = request.POST.get(f"form-{i}-end_time")
  
              availability = Availability.objects.filter(calendar=_calendar.pk, day_of_week=day_of_week).first()
--            availability.start_time = parse_time(start_time)
--            availability.end_time = parse_time(end_time)
-+            availability.start_time = datetime.strptime(start_time, "%H:%M:%S").time()
-+            availability.end_time = datetime.strptime(end_time, "%H:%M:%S").time()
+-            availability.start_time = datetime.strptime(start_time, "%H:%M:%S").time()
+-            availability.end_time = datetime.strptime(end_time, "%H:%M:%S").time()
++            availability.start_time = parse_time(start_time)
++            availability.end_time = parse_time(end_time)
              availability.save()
  
-+
-+        # for instance in availabilities:
-+        #     availability = instance.save()
-+        #     Availability.objects.filter(day_of_week=instance.day_of_week).update(
-+        #         start_time=instance.start_time,
-+        #         end_time=instance.end_time,
-+        #     )
-+        #     # instance.calendar = calendar_pk
-+        #     instance.save()
-+
-+
+-
+-        # for instance in availabilities:
+-        #     availability = instance.save()
+-        #     Availability.objects.filter(day_of_week=instance.day_of_week).update(
+-        #         start_time=instance.start_time,
+-        #         end_time=instance.end_time,
+-        #     )
+-        #     # instance.calendar = calendar_pk
+-        #     instance.save()
+-
+-
      user = request.user
      context = {}
  
      service_provider = ServiceProvider.objects.get(user=user)
      calendar = Calendar.objects.get(owner=service_provider.pk)
-+    availlabilities = Availability.objects.filter(calendar=calendar.pk)
+-    availlabilities = Availability.objects.filter(calendar=calendar.pk)
  
      edit_calendar_form = EditCalendarForm(instance=calendar)
      edit_availability_formset = EditAvailabilityFormSet(calendar_id=calendar.pk)
-+    # edit_availability_formset = EditAvailabilityFormSet(initial=availlabilities.values())
+-    # edit_availability_formset = EditAvailabilityFormSet(initial=availlabilities.values())
  
      context = {"edit_calendar_form": edit_calendar_form, "edit_availability_formset": edit_availability_formset}
  
-@@ -356,4 +341,4 @@ DAY_HOURS_30 = [
+@@ -341,4 +356,4 @@ DAY_HOURS_30 = [
      (22, 30),
      (23, 00),
      (23, 30),
 -]
-+]
 \ No newline at end of file
++]
 diff --git a/rdv/settings.py b/rdv/settings.py
-index fe33ae5..873251c 100644
+index 873251c..fe33ae5 100644
 --- a/rdv/settings.py
 +++ b/rdv/settings.py
-@@ -38,6 +38,9 @@ INSTALLED_APPS = [
+@@ -38,9 +38,6 @@ INSTALLED_APPS = [
      'django.contrib.messages',
      'django.contrib.staticfiles',
  
-+    # external apps
-+    "django_bootstrap5",
-+
+-    # external apps
+-    "django_bootstrap5",
+-
      # apps
      'account',
      'appointment',
-@@ -137,4 +140,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+@@ -140,4 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
  
  # Custom user model
 -AUTH_USER_MODEL = "account.User"
-+AUTH_USER_MODEL = "account.User"
 \ No newline at end of file
++AUTH_USER_MODEL = "account.User"
 diff --git a/templates/components/header.html b/templates/components/header.html
-index a0e5e65..90d92d9 100644
+index 90d92d9..a0e5e65 100644
 --- a/templates/components/header.html
 +++ b/templates/components/header.html
-@@ -1,22 +1,39 @@
+@@ -1,39 +1,22 @@
  <nav class="navbar navbar-expand-lg bg-body-tertiary" style="width: 100vw">
    <div class="container-fluid">
--    <a class="navbar-brand" href="{% url "list_service_providers" %}">RDV</a>
-+    <a class="navbar-brand" href="{% url "search_service_provider" %}">RDV</a>
+-    <a class="navbar-brand" href="{% url "search_service_provider" %}">RDV</a>
++    <a class="navbar-brand" href="{% url "list_service_providers" %}">RDV</a>
      {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
        <span class="navbar-toggler-icon"></span>
      </button> {% endcomment %}
--    <div class="w-auto " />
--    <div class="collapse navbar-collapse mx-4" id="navbarSupportedContent">
-+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
++    <div class="w-auto " />
++    <div class="collapse navbar-collapse mx-4" id="navbarSupportedContent">
        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
          <li class="nav-item">
--          <a class="nav-link active link-primary" aria-current="page" href="{% url "list_service_providers" %}">Home</a>
-+          <a class="nav-link active" aria-current="page" href="{% url "search_service_provider" %}">Home</a>
+-          <a class="nav-link active" aria-current="page" href="{% url "search_service_provider" %}">Home</a>
++          <a class="nav-link active link-primary" aria-current="page" href="{% url "list_service_providers" %}">Home</a>
          </li>
          <li class="nav-item">
--          <a class="nav-link link-primary" href="{% url "my_appointments" %}">Mes rendez-vous</a>
-+          <a class="nav-link" href="{% url "my_appointments" %}">Mes rendez-vous</a>
+-          <a class="nav-link" href="{% url "my_appointments" %}">Mes rendez-vous</a>
++          <a class="nav-link link-primary" href="{% url "my_appointments" %}">Mes rendez-vous</a>
          </li>
          <li class="nav-item">
--          <a class="nav-link link-primary" href="{% url "edit_calendar" %}">Mon calendrier</a>
-+          <a class="nav-link" href="{% url "edit_calendar" %}">Mon calendrier</a>
-+        </li>
-+        <li class="nav-item dropdown">
-+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-+            Dropdown
-+          </a>
-+          <ul class="dropdown-menu">
-+            <li><a class="dropdown-item" href="#">Action</a></li>
-+            <li><a class="dropdown-item" href="#">Another action</a></li>
-+            <li><hr class="dropdown-divider"></li>
-+            <li><a class="dropdown-item" href="#">Something else here</a></li>
-+          </ul>
-+        </li>
-+        <li class="nav-item">
-+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+-          <a class="nav-link" href="{% url "edit_calendar" %}">Mon calendrier</a>
+-        </li>
+-        <li class="nav-item dropdown">
+-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+-            Dropdown
+-          </a>
+-          <ul class="dropdown-menu">
+-            <li><a class="dropdown-item" href="#">Action</a></li>
+-            <li><a class="dropdown-item" href="#">Another action</a></li>
+-            <li><hr class="dropdown-divider"></li>
+-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+-          </ul>
+-        </li>
+-        <li class="nav-item">
+-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
++          <a class="nav-link link-primary" href="{% url "edit_calendar" %}">Mon calendrier</a>
          </li>
        </ul>
-+      <form class="d-flex" role="search">
-+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-+        <button class="btn btn-outline-success" type="submit">Search</button>
-+      </form>
+-      <form class="d-flex" role="search">
+-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+-        <button class="btn btn-outline-success" type="submit">Search</button>
+-      </form>
      </div>
    </div>
 -</nav>
-+</nav>
 \ No newline at end of file
++</nav>
