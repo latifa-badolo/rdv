@@ -4,160 +4,69 @@
 
 <div>
   <div class="d-flex py-2 align-items-center justify-content-end mx-5">
-    <div class="d-flex">
-        <div class="mb-4 mx-2">
-            <label for="start_time" class="form-label">Début</label>
-            <input type="time" class="form-control" id="start_time">
+    <form class="d-flex mx-6 align-items-center "  role="search" method="get">
+        <div class="d-flex">
+          <div class="mb-4 mx-2">
+              <label for="start_time" class="form-label">Début</label>
+              <input type="time" name="start_time" class="form-control" value="{{ start_time }}" id="start_time">
+          </div>
+          <div class="mb-4 mx-2">
+              <label for="end_time" class="form-label">Fin</label>
+              <input type="time" name="end_time" class="form-control" value="{{ end_time }}" id="end_time">
+          </div>
         </div>
-        <div class="mb-4 mx-2">
-            <label for="end_time" class="form-label">Fin</label>
-            <input type="time" class="form-control" id="end_time">
-        </div>
-    </div>
 
-    <select class="form-select mx-4" style="width: 150px" aria-label="Default select example">
-        <option selected>Categorie</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
-    <form class="d-flex mx-6" role="search">
-        <input class="form-control me-2 w-10" type="search" placeholder="Search" aria-label="Search">
+        <select class="form-select mx-4" name="category" style="width: 150px" value="{{ category }}" aria-label="Default select example">
+
+          <option value="">Choisissez</option>
+          {% for category_el in categories %}
+            <option value="{{ category_el.id }}" selected="{% if category_el.id == category  %} selected {% endif %}">{{ category_el.value }}</option>
+          {% endfor %}
+        </select>
+        <input class="form-control me-2 w-10" type="search" value="{{ search }}" name="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
   </div>
 
+  
   <div>
-    <div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-2">
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mx-4 my-2">
+      {% for service_provider in service_providers %}
+      <a class="nav-link" style="color: #222;text-decoration: none;" href="{% url "service_provider_detail" service_provider.id %}">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex gap-2 my-1">
+                <img src="{{ service_provider.user.avatar_url }}" width="50" height="50" class="object-fit-cover rounded-circle" alt="{{ service_provider.user }}" />
+                <h5 class="card-title">{{ service_provider.user }}</h5>
+              </div>
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Métier : </td>
+                    <td>{{ service_provider.work }}</td>
+                  </tr>
+                  <tr>
+                    <td>Niveau d'étude : </td>
+                    <td>{{ service_provider.level_of_education }}</td>
+                  </tr>
+                  <tr>
+                    <td>Ville : </td>
+                    <td>{{ service_provider.town }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              {% if service_provider.description %}
+                <p class="card-text">
+                  <span class="fs-5 fw-semibold d-inline-block">Description : </span>
+                  <span class="fs-6 lh-sm d-inline-block "> {{ service_provider.description |truncatechars:135 }}</span> 
+                </p>
+              {% endif %}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <img src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a longer card with supporting text below as a natural
-              lead-in to additional content. This content is a little bit
-              longer.
-            </p>
-          </div>
-        </div>
-      </div>
+      </a>
+      {% endfor %}
     </div>
   </div>
 </div>

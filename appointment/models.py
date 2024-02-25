@@ -12,18 +12,6 @@ class Calendar(models.Model):
         on_delete=models.CASCADE,
     )
 
-    appointments_limit_per_day = models.IntegerField(
-        default=10,
-        null=True,
-        blank=True,
-    )
-
-    active = models.BooleanField(
-        default=True,
-        null=False,
-        blank=False,
-    )
-
     created_at = models.DateTimeField(
         null=True,
         blank=True,

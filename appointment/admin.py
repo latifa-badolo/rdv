@@ -7,7 +7,7 @@ class AvailabilityInline(admin.TabularInline):
 
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
-    list_display = ["owner", "active", "updated_at"]
+    list_display = ["owner", "updated_at"]
     inlines = [AvailabilityInline]
 
 @admin.register(Availability)

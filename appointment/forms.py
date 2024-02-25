@@ -4,30 +4,6 @@ from django.forms import BaseModelFormSet
 from .models import Calendar, Appointment, Availability
 from django.forms import formset_factory, modelformset_factory
 
-
-class EditCalendarForm(forms.ModelForm):
-
-    appointments_limit_per_day = forms.IntegerField(
-        required=False,
-        label="Rendez-vous par jour",
-        widget=forms.NumberInput(attrs={"class": "form-control", "size": 10})
-    )
-
-    active = forms.BooleanField(
-        required=False,
-        label="Activer",
-        widget=forms.CheckboxInput(
-            attrs={
-                "class": "form-check-input form-switch"
-            },
-        ),
-    )
-
-    class Meta:
-        model = Calendar
-        fields = ["appointments_limit_per_day", "active"]
-
-
 class CreateAppointmentForm(forms.ModelForm):
 
     date = forms.DateField(
@@ -39,13 +15,13 @@ class CreateAppointmentForm(forms.ModelForm):
     start_time = forms.TimeField(
         required=True,
         label="Début",
-        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
+        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "step": "600", "size": 6})
     )
 
     end_time = forms.TimeField(
         required=True,
         label="Fin",
-        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6})
+        widget=forms.TimeInput(attrs={"class": "form-control", "type": "time", "step": "600", "size": 6})
     )
 
     message = forms.CharField(
@@ -59,28 +35,29 @@ class CreateAppointmentForm(forms.ModelForm):
         fields = ["date", "start_time", "end_time", "message"]
 
 
-# class EditAvailabilityForm(forms.ModelForm):
-#     day_of_week = forms.CharField(
-#         required=True,
-#         label="Jour",
-#         widget=forms.Select(attrs={"class": "form-select", })
-#     )
+class EditAvailabilityForm(forms.ModelForm):
+    day_of_week = forms.ChoiceField(
+        disabled=True,
+        required=True,
+        label="Jour",
+        widget=forms.Select(attrs={"class": "form-select mx-2"})
+    )
 
-#     start_time = forms.TimeField(
-#         required=False,
-#         label="Début",
-#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
-#     )
+    start_time = forms.TimeField(
+        required=False,
+        label="Début",
+        widget=forms.TimeInput(attrs={"class": "form-control mx-2", "type": "time", "size": 6})
+    )
 
-#     end_time = forms.TimeField(
-#         required=False,
-#         label="Fin",
-#         widget=forms.TimeInput(attrs={"class": "form-control", "size": 6})
-#     )
+    end_time = forms.TimeField(
+        required=False,
+        label="Fin",
+        widget=forms.TimeInput(attrs={"class": "form-control mx-2", "type": "time", "size": 6})
+    )
 
-#     class Meta:
-#         model = Availability
-#         fields = ["day_of_week", "start_time", "end_time"]
+    class Meta:
+        model = Availability
+        fields = ["day_of_week", "start_time", "end_time"]
 
 
 class BaseAvailabilityFormSet(BaseModelFormSet):
@@ -101,8 +78,7 @@ EditAvailabilityFormSet = modelformset_factory(
     },
     widgets={
         "day_of_week": forms.Select(attrs={"class": "form-select", "disabled": "disabled"}),
-        "start_time": forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6}),
-        "end_time": forms.TimeInput(attrs={"class": "form-control", "type": "time", "size": 6}),
+        "start_time": forms.TimeInput(attrs={"class": "form-control", "step": "600", "type": "time", "size": 6}),
+        "end_time": forms.TimeInput(attrs={"class": "form-control", "step": "600", "type": "time", "size": 6}),
     },
 )
-

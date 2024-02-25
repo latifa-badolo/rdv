@@ -1,23 +1,22 @@
 {% extends "base.html" %} {% block title %}Mon calendrier{% endblock title %}
 {%block content %}
 
-<div class="container d-flex">
+<div class="container d-flex mt-4 ">
   <div class="w-50">
     <div class="card mb-3">
       <div class="card-body m-2 gap-2 ">
         <div class="d-flex justify-content-start align-items-center gap-3">
           <img
-            class="rounded d-block"
-            src="https://dthezntil550i.cloudfront.net/t4/latest/t42012041046327030017527525/95210b05-41d1-4f57-a146-00a28a2bba81.jpg"
-            width="50px"
-            height="50px"
+            class=" rounded-circle d-block"
+            src="{{ owner.avatar_url }}"
+            width="60px"
+            height="60px"
             alt="..."
           />
           <p class="fs-4 fw-semibold">{{ owner.last_name }} {{ owner.first_name }}</p>
-          {% comment %} <h5 class="card-title">Card title</h5> {% endcomment %}
         </div>
         <p>
-          <table class="table">
+          <table class="table table-sm">
             <tbody>
               <tr>
                 <td>Métier : </td>
@@ -38,19 +37,31 @@
           {{ service_provider.description }}
         </p>
       </div>
-      <hr size="1" />
-      <div class="card-body">
-        <p class="fs-4 fw-semibold mb-2 ">Disponibilité</p>
-        {% for availability in availabilities %}
-        <div class="d-flex">
-          <p class="mx-2">{{ availability.day_of_week }} : </p>
-          <div class="d-flex mx-1 gap-1 ">
-            <p>{{ availability.start_time | time:"H\hi " }}</p>
-            <p>-</p>
-            <p>{{ availability.end_time | time:" H\hi" }}</p>
-          </div>
-        </div>
-        {% endfor %}
+      <div class="w-100 opacity-25 " style="height: 1px; background: gray;"> </div>
+      <div class="mx-4 my-1 ">
+        <div class="fs-5 fw-semibold mb-2 row-gap-0 gap-0  ">Disponibilité</div>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Jours</th>
+              <th scope="col">Horaires</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for availability in availabilities %}
+              {% if availability.day_of_week and availability.end_time %}
+                <tr class="">
+                  <td class="m-0">{{ availability.day_of_week }} : </td>
+                  <td class="d-flex gap-2 ">
+                    <p class="m-0">{{ availability.start_time | time:"H\hi " }}</p>
+                    <p class="m-0">-</p>
+                    <p class="m-0">{{ availability.end_time | time:" H\hi" }}</p>
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -60,62 +71,18 @@
         <p class="fs-3">Prendre rendez-vous</p>
         <form method="post">
           {% csrf_token %}
-
-          {% comment %} <div class="mb-3">
-            <label for="service" class="form-label">Service</label>
-            <select
-              class="form-select form-select-sm"
-              name="service"
-              id="service"
-            >
-              <option selected>One</option>
-              <option value="Two">Two</option>
-              <option value="Three">Thee</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" name="date" id="date" />
-          </div>
-          <div class="d-flex justify-content-start gap-4">
-            <div class="mb-3">
-              <label for="start_time" class="form-label">Début</label>
-              <input
-                type="time"
-                class="form-control"
-                name="start_time"
-                id="start_time"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="end_time" class="form-label">Fin</label>
-              <input
-                type="time"
-                class="form-control"
-                name="end_time"
-                id="end_time"
-              />
-            </div>
-          </div>
-
-          <input
-            name="submit"
-            id="submit"
-            class="btn btn-primary"
-            type="submit"
-            value="Demander le rendez-vous"
-          /> {% endcomment %}
-
           <div class="mx-2">
-            {{ appointment_form }}
-
-            <!-- {% for form in appointment_form %}
-              <div class="my-3">
-              {{ form }}
+            {% for form in appointment_form %}
+              <div class="mb-3">
+                {{ form.label_tag }} {{ form }} {% if form.errors %}
+                <div>
+                  {% for error in form.errors %}
+                  <li><strong>{{ error|escape }}</strong></li>
+                  {% endfor %}
+                </div>
+                {% endif %} {{ form.errors }}
               </div>
-            {% endfor %} -->
-
+            {% endfor %}
             <input
               name="submit"
               id="submit"

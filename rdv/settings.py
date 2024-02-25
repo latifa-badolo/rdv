@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # external apps
-    "django_bootstrap5",
 
     # apps
     'account',

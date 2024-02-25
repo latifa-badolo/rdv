@@ -1,39 +1,62 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="width: 100vw">
+<nav class="navbar navbar-expand-lg bg-body-secondary bg-primary" style="width: 100vw">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url "search_service_provider" %}">RDV</a>
-    {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button> {% endcomment %}
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <a class="navbar-brand link-dark " href="{% url "list_service_providers" %}">RDV</a>
+    <div class="w-auto " />
+    <div class="collapse navbar-collapse mx-4">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url "search_service_provider" %}">Home</a>
+          <a class="nav-link active link-dark" aria-current="page" href="{% url "list_service_providers" %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url "my_appointments" %}">Mes rendez-vous</a>
+          <a class="nav-link link-dark" href="{% url "my_appointments" %}">Mes rendez-vous</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url "edit_calendar" %}">Mon calendrier</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          <a class="nav-link link-dark" href="{% url "edit_calendar" %}">Mon calendrier</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </div>
 </nav>
+
+{% comment %} <div style="width: 100vw">
+  <style>
+    .navbar-brand {
+      color: #fff !important; /* Couleur du texte à gauche */
+    }
+
+    .navbar-nav {
+      margin-left: auto;
+    }
+
+    .navbar-nav a {
+      color: #000;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+
+    .navbar-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .nav-item.active a {
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    .avatar {
+      margin-right: 10px;
+    }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-primary bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand fs-4 fw-bold " href="#">Nom du Site</a>
+      <div class="navbar-nav">
+        <a class="nav-link active " href="#">Accueil</a>
+        <button type="button" class="btn btn-secondary btn-sm py-1 ">Small button</button>
+        <a class="nav-link" href="#">Page 1</a>
+        <a class="nav-link" href="#">Page 2</a>
+      </div>
+    </div>
+  </nav>
+</div> {% endcomment %}

@@ -6,20 +6,45 @@
   <form method="post">
     {% csrf_token %}
 
-    <fieldset name="Calandrier" class="my-4 mx-5">
-      <div class="d-flex align-items-center">{{edit_calendar_form}}</div>
-    </fieldset>
-
-    <fieldset name="Horaires" class="my-4 mx-5">
-      <div></di>
-      <div>
-        {% for form in edit_availability_formset %}
-
-        <div class="d-flex align-items-center my-3">{{form}}</div>
-
-        {% endfor %}
+    <div class="container d-flex gap-5">
+      <div class="w-50">
+        <div class="">
+          <div class="">
+            <p class="fs-4 fw-semibold">Information de prestataire</p>
+            <div>
+              {% for form in edit_service_srovider_form %}
+              <div class="mb-3">
+                {{ form.label_tag }} {{ form }} {% if form.errors %}
+                <div>
+                  {% for error in form.errors %}
+                  <li><strong>{{ error|escape }}</strong></li>
+                  {% endfor %}
+                </div>
+                {% endif %} {{ form.errors }}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
       </div>
-    </fieldset>
+      <hr style="width: 2px; height: 500px" />
+      <div class="w-50">
+        <div class="">
+          <div class="">
+            <p class="fs-4 fw-semibold">Disponibilité</p>
+            <div>
+              {% for form in edit_availability_formset %}
+              <div class="d-flex align-items-center my-3">
+                {% for f in form %}
+                <div class="mx-2">{{f}}</div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <button type="submit" class="btn btn-primary">Primary</button>
   </form>

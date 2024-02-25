@@ -11,16 +11,20 @@ class User(AbstractUser):
     )
 
     avatar = models.ImageField(
-        upload_to="user/avatat",
-        height_field=255,
-        width_field=255,
+        upload_to=f"user/avatar/",
         max_length=255,
         null=True,
         blank=True,
     )
 
+    @property
+    def avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return 'https://static.vecteezy.com/system/resources/previews/016/916/479/original/placeholder-icon-design-free-vector.jpg'
+
     def __str__(self):
-        return self.username
+        return f'{self.first_name} {self.last_name}' 
 
 
 class Category(models.Model):
@@ -136,5 +140,4 @@ class ServiceProvider(models.Model):
     )
 
     def __str__(self):
-        return self.user.username
-
+        return f"{self.user.first_name} {self.user.last_name}"
