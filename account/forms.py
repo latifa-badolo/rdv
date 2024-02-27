@@ -3,7 +3,32 @@ from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationFo
 
 from .models import User, ServiceProvider, Category
 
-class RegisterForm(BaseUserCreationForm):
+class RegisterForm(forms.Form):
+
+    username = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    password = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    confirm_password = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
 
     phone_number = forms.CharField(
         required=True,
@@ -17,12 +42,17 @@ class RegisterForm(BaseUserCreationForm):
 
     avatar = forms.FileField(
         required=True,
-        widget=forms.FileField()
+        widget=forms.FileInput()
+    )
+
+    is_service_provider = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput()
     )
 
     class Meta:
         model = User
-        fields = ["username", "password1", "password2", "phone_number","email", "avatar", "first_name", "last_name"]
+        fields = ["username", "password", "confirm_password", "phone_number", "email", "avatar", "first_name", "last_name"]
 
 
 class EditServiceProviderForm(forms.ModelForm):
