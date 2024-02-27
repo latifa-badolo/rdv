@@ -159,7 +159,7 @@ def accept_appointment(request, appointment_id):
     if not service_provider:
         return redirect("create_service_provider")
 
-    user = User.objects.get(pk=user.pk)
+    user = User.objects.get(pk=request.user.pk)
     pending_appointments = Appointment.objects.get(pk=appointment_id, calendar__owner=service_provider)
     pending_appointments.status = "ACCEPTED"
     pending_appointments.save()
